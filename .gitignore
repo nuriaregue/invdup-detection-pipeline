@@ -1,0 +1,17 @@
+.venv/
+.venv-1/
+.env
+__pycache__/
+*.pyc
+*.json
+*.fa
+BLASTS/*
+*.bed
+*.xlsx
+*.bam
+*.bai
+results/invdup_filtering
+results/self_blast
+*.fai
+BAM/allcoords.txt
+
