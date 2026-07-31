@@ -207,6 +207,7 @@ def fetch_supplementaries(sa_tag:dict,bam_path:Path,read_id:str,classified_reads
                 same_strand = align_strand == sa_tag["strand"]
                 if query_name == read_id and same_position and same_strand:
                     add_recovered_sa_alignment(classified_reads[read_id],align)
+                    record_found = True
 
         else:
             print(f"Reference not found in BAM: {chromosome}")

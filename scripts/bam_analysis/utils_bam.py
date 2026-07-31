@@ -19,7 +19,7 @@ def proces_allcoords(allcoords_path:Path,margin:int)->dict:
                 #Once we have each line of information, we get our fields of interest
                 inv_id = columns[0]
                 chromosome = "chr" + columns[1]
-                #Fetch works with 0-based coords, but allcoords with 1-based coords?
+                #allcoords uses 1-based coordinates, while pysam fetch uses a 0-based start.
                 start = int(columns[2]) - 1 
                 start=start-margin
                 end = int(columns[5])
@@ -29,7 +29,7 @@ def proces_allcoords(allcoords_path:Path,margin:int)->dict:
     return all_inv
 
 def process_reads(bam_path:Path, allcoords_inv:dict,margin:int)->dict:
-    #We make sure that BAM file is available and all_inv i
+    #We check that the BAM and inversion coordinates are available.
     if not bam_path.exists() :
         raise FileNotFoundError(f" {bam_path} was not found")
     elif len(allcoords_inv)==0:

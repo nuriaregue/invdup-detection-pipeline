@@ -66,7 +66,6 @@ def group_blast_hits(hits: list):
 def is_unique_hit(sorted_pos:tuple, unique_hits:dict):
     """
     A new unique_hit has a new dictionary entrance.
-    TODO: change this method to accept similar hits
     """
     return unique_hits.get(sorted_pos) is None
 

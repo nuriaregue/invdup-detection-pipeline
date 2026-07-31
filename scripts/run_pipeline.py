@@ -1,11 +1,8 @@
 """
-Run the INV_DUP analysis pipeline for selected BAM files.
-
-For each BAM, the pipeline:
-1. Selects candidate reads.
-2. Recovers reliable supplementary alignments.
-3. Generates the segment-level TSV.
-4. Generates the read geometry TSV.
+Run the complete INV_DUP analysis pipeline for one BAM file.
+The pipeline selects candidate reads, recovers supplementary alignments,generates the segment and geometry tables, classifies reads according to
+their geometry, groups compatible coordinates into recurrent events,runs the self-BLAST analysis and creates the final BAM-level summary.
+The main candidate event is finally compared with repeated regions detected in the reference.
 """
 
 from pathlib import Path
@@ -21,9 +18,6 @@ from scripts.config import (
     BLAST_RESULTS_DIR,
     OUTPUT_TSV_DIR,
     REFERENCE_PATH,
-    BLAST_HITS_TSV,
-    BLAST_PAIRS_TSV,
-    BLAST_SUMMARY_TSV,
     BED_DIR,
     MIN_IDENTITY,
     MIN_LENGTH
@@ -39,17 +33,6 @@ from scripts.self_blast import process_self_blast as psb
 from scripts.self_blast import deduplicate_self_blast as dd 
 from scripts.self_blast import generate_bed as gb
 from scripts.reads_analysis import compare_selfblast as cs
-
-"""
-    BAM_DIR / "HsInv0170_HG00599.bam",
-    BAM_DIR / "HsInv0170_HG00639.bam",
-    BAM_DIR / "HsInv0186_HG03563.bam",
-    BAM_DIR / "HsInv0186_NA20355.bam",
-    BAM_DIR / "HsInv1146_HG02258.bam",
-    BAM_DIR / "HsInv1146_HG02280.bam",
-    BAM_DIR / "HsInv0001_Std.bam",
-    BAM_DIR / "HsInv1153_HG02841.bam",
-"""
 
 def process_self_blast(inv_id: str, bam_name: str):
     """
@@ -110,7 +93,7 @@ def process_bam(bam_path: Path,all_inv: dict) -> None:
             bam_output_dir.mkdir(parents=True,exist_ok=True)
 
             inv_id = bam_name.split("_")[0]
-            #process_self_blast(inv_id,bam_name)
+            process_self_blast(inv_id,bam_name)
             blast_pairs_path = OUTPUT_TSV_DIR / bam_name / f"{bam_name}_blast_pairs.tsv"
 
             print("\n" + "*" * 60)
@@ -161,8 +144,14 @@ def process_bam(bam_path: Path,all_inv: dict) -> None:
             important_fields = [
                 "BAM", "INVERSION", "N_READS", "N_POSSIBLE_INV_DUP", "N_EVENTS", "N_RECURRENT_EVENTS",
                 "INV_DUP_EVENT_TYPE", "INV_DUP_MAIN_EVENT_READS", "EVENT_START", "EVENT_END", "FRACTION_POSSIBLE_READS_IN_MAIN_EVENT",
-                "IS_POSS_INV_DUP", "HAS_REFERENCE_REPEAT", "REFERENCE_PAIR_ID", "REFERENCE_ORIENTATION", "REFERENCE_FILTER_STATUS"
-            ]
+                "IS_POSS_INV_DUP"]
+            if blast_pairs_path.exists():
+                important_fields += [
+                    "HAS_REFERENCE_REPEAT",
+                    "REFERENCE_PAIR_ID",
+                    "REFERENCE_ORIENTATION",
+                    "REFERENCE_FILTER_STATUS"
+                ]
             final_summary_df = pd.read_csv(summary_path,delimiter="\t")
 
             print("\n" + "*" * 60)
@@ -272,14 +261,3 @@ if __name__ == "__main__":
 
     all_inv = ub.proces_allcoords(ALLCOORDS_PATH,MARGIN)
     process_bam(bam_path=bam_path,all_inv=all_inv)
-
-"""
-TODO:
-1. Setup del environment més automàtic + script per posar nom del bam
-2. Comentaris
-3. Taula resum 
-4. Revisar tot el tema dels comentaris
-5. Distribució del 75% com fa el ricardo (si es canvia dir-ho)
-6. Imatges!!!
-8. Explicar que és cada tsv i la classificacio final
-"""

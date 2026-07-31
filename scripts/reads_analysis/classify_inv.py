@@ -73,7 +73,7 @@ def classify_one_read(row: pd.Series,read_pairs: DataFrame) -> tuple:
     
     # Main geometry with only one orientation does not support an inversion.
     # However, an opposite-strand supplementary alignment inside the gap may complete the inverted pattern.
-    elif len(set(strand_pattern)) == 1: #TODO:revisar aquest cas
+    elif len(set(strand_pattern)) == 1: 
         if has_sa_in_region_gap: 
             return "POSSIBLE_INV_DUP","REGION_GAP_WITH_INVERTED_SA_SUPPORT"
         elif max_query_gap > MAX_QUERY_GAP_BP: 
@@ -82,7 +82,7 @@ def classify_one_read(row: pd.Series,read_pairs: DataFrame) -> tuple:
             return "NOT_INV_DUP","SAME_STRAND_ONLY"
         
     elif has_mirror_like_pair(read_pairs): # Strongly symmetric opposite-strand mappings are preserved as ambiguous because they may represent redundant or uncertain alignments.
-        return "AMBIGUOUS","MIRROR_LIKE_GEOMETRY" #We discard the whole read
+        return "AMBIGUOUS","MIRROR_LIKE_GEOMETRY" 
     
     elif n_segments >= 3:
         # Reads with three or more segments require at least one repeated chromosome to preserve the genomic context of the event.

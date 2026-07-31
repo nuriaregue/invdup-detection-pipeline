@@ -1,16 +1,6 @@
 """
-1. Per cada read guardar
-    - Si overlap: segments on es produeix overlap
-    - Si GAP: reg1 -SAs - reg2
-
-2. Buscar events 
-Per cada read de INV_DUP mirar
-    - Si overlap: mirar si final de la regió 1 i inici de la regió 2 són similars 
-    TEMA DELS STRANDS: clar realment inici i fi estan invertits en les regions -
-        vale segons l'strand es mira quina és la coordenada d'inici o fi
-    - Si GAP: mirar si reg1 final, SAs i regió 2 inici son similars
-Similars seria unes coordenades amb +=Marge i = chr
-La cosa es com es sabria amb quines coordenades mirar si son similars? 
+Build coordinate signatures from POSSIBLE_INV_DUP reads and group
+similar signatures into recurrent coordinate events.
 """
 from statistics import median
 import pandas as pd
@@ -177,7 +167,6 @@ def get_overlap_support(read_pairs):
     return best_pair
 
 def get_sa_gap_support(read_segments):
-    #TODO: arreglar el refactoring
     """
     Method to extract the regions flanks and supplementary segments that support a query gap.
     """
@@ -474,34 +463,3 @@ if __name__ == "__main__":
                 bam_dir / f"{bam_name}_read_segments.tsv",
                 bam_dir / f"{bam_name}_pairs.tsv"
             )
-
-
-"""
-OVERLAP:
-vale la osa es que la 0231 te SUPER ESTABLE START LOCAL_OVERLAP
-→ mateix chr
-→ coordenada recurrent (start o end) dins ±COORDINATE_MARGIN
-for cada signature:
-    mirar events compatibles
-    si n'hi ha:
-        afegir read
-    si no:
-        crear event
-
-GAP:
-agrupar per reads de REGIONS i dins aquests mirar si tenen el mateix SA
-mateixa inversió
-mateix chr dels REGION
-mateix strand dels REGION
-flank_1 semblant ±COORDINATE_MARGIN
-flank_2 semblant ±COORDINATE_MARGIN
-i almenys un SA apunta a una zona semblant
-
-requisit mida:
-event_size = (
-    sum(current_event["overlap_sizes"])
-    / len(current_event["overlap_sizes"])
-)
-
-similar_size = abs(overlap_size - event_size) <= OVERLAP_SIZE_MARGIN
-"""

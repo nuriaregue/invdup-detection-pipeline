@@ -1,10 +1,6 @@
-
 """
-1. Mirar la geometria del read --> Com estan organitzats els segments dins d'aquest read?
-2. Mirar si aquest patró es repeteix en la resta de reads? Els reads que tenen una geometria semblant també connecten les mateixes regions del genoma?
-
-
-"""
+Calculate read-level geometry and pairwise relationships between alignment segments used for INV_DUP classification.
+""" 
 from pathlib import Path
 from scripts.config import (
     MIN_GEOMETRY_MAPQ,
