@@ -342,6 +342,14 @@ Multiple SA alignments are kept because complex reads such as HsInv1146 cannot a
 
 An event is considered recurrent when at least two reads support it.
 
+### Representative event coordinates
+The reads grouped into the same event do not always have exactly the same coordinates. Small differences can appear between alignments, so I do not use the coordinates of a single read as the final event position.
+For each type of event, the pipeline first checks whether the start or the end coordinate is more recurrent between the candidate reads. Two coordinates are considered compatible when they are within COORDINATE_MARGIN. The most recurrent boundary is then used as the anchor for grouping the reads.
+As reads are added to an event, the event anchor is updated using the median of the anchor coordinates from all the reads already assigned to that event. I used the median because it gives a simple representative coordinate while being less affected by a read with a slightly more distant breakpoint.
+Once the events have been grouped, the final coordinate table stores the median start and median end across all reads supporting each event. Therefore, these values represent the central coordinates of the event and do not necessarily correspond exactly to the interval of one individual read.
+For GAP events, the same idea is also applied to the supplementary alignments. MEDIAN_SA_START and MEDIAN_SA_END summarize the coordinates of the SA segments supporting the event.
+For now, I only keep these median coordinates in the event summary. This gives a simple representative position, but it does not show how dispersed the individual read coordinates are. A future improvement could also report the coordinate distribution, for example the 25th and 75th percentiles, to show the variability between supporting reads.
+
 ---
 
 ## 10. Final BAM summary and self-BLAST comparison
