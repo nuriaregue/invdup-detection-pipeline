@@ -1,6 +1,5 @@
 """
-Generate a first read-level INV_DUP candidate classification from the geometry
-and consecutive segment-pair tables.
+Generate a provisional read-level INV_DUP classification from the read geometry and segment-pair tables.
 """
 
 from pathlib import Path

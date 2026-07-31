@@ -281,7 +281,7 @@ def process_one_read(bam:str,read_id:str,all_align:DataFrame,geom_align:DataFram
     Generate the read-level summary and the pair-level row for one read
     """
     row_dict = build_initial_row(bam,read_id,all_align,geom_align)
-    # We first calculate the metrics of each consecutive segment pair.
+    #We calculate the pairwise metrics between the geometry segments.
     pair_rows = process_segment_pairs(bam,read_id,all_align["INVERSION"].iloc[0],geom_align)
     #The read-level summary reuses the pair-level query metrics.
     row_dict = add_geometry(row_dict=row_dict,geom_align=geom_align,pair_rows=pair_rows,suplementary_alignments=suplementary_alignments)
@@ -289,7 +289,7 @@ def process_one_read(bam:str,read_id:str,all_align:DataFrame,geom_align:DataFram
 
 def calculate_query_relationship(current: dict,next_segment: dict):
     """
-    Calculate the query gap or overlap between two consecutive segments.
+    Calculate the query gap or overlap between two ordered segments.
     """
     query_diff = next_segment["CORR_QUERY_START"] - current["CORR_QUERY_END"]
     

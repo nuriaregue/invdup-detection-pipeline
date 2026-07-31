@@ -103,7 +103,7 @@ def process_bam(bam_path: Path,all_inv: dict) -> None:
             #Each TSV stores the analysis at a different level:
             # - read_segments: individual alignments
             # - segments_geometry: one geometry summary per read
-            # - segment_pairs: geometry and information between consecutive reliable alignments
+            # - segment_pairs: pairwise geometry between reliable alignment segments
             segments_path = bam_output_dir / f"{bam_name}_read_segments.tsv"
             geometry_path = bam_output_dir / f"{bam_name}_segments_geometry.tsv"
             pairs_path=bam_output_dir / f"{bam_name}_pairs.tsv"

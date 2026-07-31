@@ -1,8 +1,6 @@
 import csv
 from pathlib import Path
 from scripts.config import MARGIN
-#results_by_invs té una llista de diccionaris hits (hits es la clau, dins de la inv)  
-#exemple: results_by_invs[inv001][hits] i aqui cal fer un for per cada hit en hits
 
 
 def get_hit_intervals(hit: dict):
